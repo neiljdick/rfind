@@ -23,26 +23,33 @@ struct Opt {
     directory: Option<String>,
 }
 
-
-fn main() {
-    let opt = Opt::from_args();
-    println!("{:?}", opt);
-
-    let re = Regex::new(&opt.needle).unwrap();
-
-    match opt.directory {
-        Some(x) => println!("Result: {}", x),
-        None => println!("directory is {:?}",
-                         env::current_dir()
-                         .unwrap()
-                         .to_str()),
-    }
-
-    for entry in WalkDir::new("/home/neil/Downloads")
+fn do_search(re: &Regex, dir: &str)
+{
+    for entry in WalkDir::new(dir)
         .into_iter().
         filter_map(|e| e.ok()) {
             if re.is_match(entry.file_name().to_str().unwrap()) { 
                 println!("{}", entry.path().display());
             }
         }
+}
+
+fn make_regex(opt: &Opt) -> Regex {
+    match opt.fuzz {
+        true => Regex::new(&opt.needle).unwrap(),
+        false => Regex::new(&format!("^{}$", opt.needle)).unwrap()
+    }
+}
+
+fn main() {
+    let opt = Opt::from_args();
+
+    let re = make_regex(&opt);
+
+    let dir = match opt.directory {
+        Some(x) => x,
+        None => env::current_dir().unwrap().to_str().unwrap().to_string()
+    };
+
+   do_search(&re, &dir);
 }
