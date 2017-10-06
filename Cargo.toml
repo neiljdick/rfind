@@ -6,3 +6,5 @@ authors = ["Neil Dick <neil@cog.systems>"]
 [dependencies]
 walkdir = "1"
 regex = "0.2"
+structopt = "0.1.0"
+structopt-derive = "0.1.0"
