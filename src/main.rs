@@ -7,19 +7,18 @@ extern crate structopt_derive;
 use walkdir::WalkDir;
 use regex::Regex;
 use structopt::StructOpt;
-use std::env; //get the pwd
 
 #[derive(StructOpt, Debug)]
-#[structopt(name = "example", about = "Example of structopt usage.")]
+#[structopt(name = "rfind", about = "A file finder.")]
 struct Opt {
-    #[structopt(short = "f", long="fuzzy", help = "Match partial name")]
+    #[structopt(short = "f", long="fuzzy", help = "Match partial file names")]
     fuzz:bool,
 
-    #[structopt(help ="filename")]
+    #[structopt(help ="file name to search for")]
     needle: String,
 
     // Optional Directory
-    #[structopt(help = "Directory to search, default to pwd")]
+    #[structopt(help = "Directory to search, defaults to pwd")]
     directory: Option<String>,
 }
 
@@ -46,10 +45,7 @@ fn main() {
 
     let re = make_regex(&opt);
 
-    let dir = match opt.directory {
-        Some(x) => x,
-        None => env::current_dir().unwrap().to_str().unwrap().to_string()
-    };
+    let dir = opt.directory.unwrap_or(".".to_string());
 
-   do_search(&re, &dir);
+    do_search(&re, &dir);
 }
