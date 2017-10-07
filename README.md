@@ -1,5 +1,5 @@
 # rfind
-Crap GNU find replacement in rust!
+Simple GNU find alternative written in rust!
 
 # About
 GNU find is excellent, but the interface can be clumsy at times. I often find myself typing `find . -name "*foo*"`.
@@ -21,3 +21,6 @@ Fuzzy Search for files containing 'foo', equivalent to `find . -name "*foo*"`
 `rfind` accepts regular expressions directly. Eg: Search for files ending in .c or .h in the current directory
 
 `rfind "*\.[ch]"`
+
+# Performance
+The hard parts are all implemented using the WalkDir and Regex libraries, which are very fast. Performance is at least as good as GNU find in my testing.
